@@ -170,6 +170,7 @@ const Category = () => {
             title: '分类名称',
             dataIndex: 'name',
             key: 'name',
+            ellipsis: true
         },
         {
             title: 'Action',

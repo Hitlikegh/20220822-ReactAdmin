@@ -194,10 +194,9 @@ const Category = () => {
 
 
     useEffect(() => {
-        return () => {
 
-            getCategory(states.parentId);
-        };
+        getCategory(states.parentId);
+        
     }, []);
 
 

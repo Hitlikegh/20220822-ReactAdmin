@@ -138,9 +138,7 @@ const Role = () => {
 
 
     useEffect(() => {
-        return () => {
-            getRoles();
-        };
+        getRoles();
     }, []);
 
     const { roles, role, isShowModal, isShowAuth } = states;

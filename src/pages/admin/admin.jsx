@@ -5,15 +5,15 @@ import { Layout } from 'antd';
 
 // 二级路由导入
 
-import Home from '../home/home';
-import Category from '../category/category';
-import Role from '../role/role';
-import User from '../user/user';
-import Product from '../products/product';
+// import Home from '../home/home';
+// import Category from '../category/category';
+// import Role from '../role/role';
+// import User from '../user/user';
+// import Product from '../products/product';
 
-import Bar from '../charts/bar';
-import Line from '../charts/line';
-import Pie from '../charts/pie';
+// import Bar from '../charts/bar';
+// import Line from '../charts/line';
+// import Pie from '../charts/pie';
 
 
 // import memoryUtils from '../../utils/memoryUtils';
@@ -22,19 +22,19 @@ import Headersh from '../../component/header/header';
 
 // redux 
 import { connect } from 'react-redux';
-// import { lazy, Suspense, useEffect } from 'react';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+// import { useEffect } from 'react';
 
 // 二级路由懒加载
-// const Home = lazy(() => import('../home/home'));
-// const Category = lazy(() => import('../category/category'));
-// const Role = lazy(() => import('../role/role'));
-// const User = lazy(() => import('../user/user'));
-// const Product = lazy(() => import('../products/product'));
+const Home = lazy(() => import('../home/home'));
+const Category = lazy(() => import('../category/category'));
+const Role = lazy(() => import('../role/role'));
+const User = lazy(() => import('../user/user'));
+const Product = lazy(() => import('../products/product'));
 
-// const Bar = lazy(() => import('../charts/bar'));
-// const Line = lazy(() => import('../charts/line'));
-// const Pie = lazy(() => import('../charts/pie'));
+const Bar = lazy(() => import('../charts/bar'));
+const Line = lazy(() => import('../charts/line'));
+const Pie = lazy(() => import('../charts/pie'));
 
 const { Footer, Sider, Content } = Layout;
 
@@ -66,8 +66,7 @@ const Admin = (props) => {
                         <div style={{ backgroundColor: "#f0f2f5", height: "30px" }}></div>
 
                         <Content style={{ margin: 20, backgroundColor: "white", height: "100%" }}>
-                            {/* <Suspense fallback={<div>Loading...</div>}>
-                            </Suspense> */}
+                            <Suspense fallback={<div>Loading...</div>}>
                                 <Routes>
                                     <Route>
                                         <Route path='*' element={<Home />}></Route>
@@ -83,6 +82,7 @@ const Admin = (props) => {
                                     <Route path='/charts/line' element={<Line />}></Route>
                                     <Route path='/charts/pie' element={<Pie />}></Route>
                                 </Routes>
+                            </Suspense>
                         </Content>
 
                         <Footer style={{ textAlign: "center", backgroundColor: "#f0f2f5" }}>推荐使用谷歌浏览器浏览以获得最佳体验</Footer>

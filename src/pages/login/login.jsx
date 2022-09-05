@@ -2,43 +2,28 @@
 // import './App.css';
 import React from "react";
 import { useNavigate } from 'react-router-dom'
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import './login.less';
 import logo from '../../assets/images/logo.jpg';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, message } from 'antd';
-import { reqLogin } from '../../api/index';
-import { ajax } from '../../api/ajax';
-import memoryUtils from '../../utils/memoryUtils';
+import { Button, Form, Input } from 'antd';
 
-const Login = () => {
+// redux
+import { login } from "../../redux/action";
+import { connect } from "react-redux";
+
+const Login = (props) => {
 
     const Item = Form.Item;
     let navigate = useNavigate();
+
     async function onFinish(values) {
         const { username, password } = values;
-        // reqLogin(username,password).then(response=>{
-        //     console.log('请求成功',response.data)
-        // }).catch(err=>{
-        //     console.log('失败',err)
-        // })
-        const response = await reqLogin(username, password);
-
-        const result = response.data;
-        // console.log(result);
-        if (result.status === 0) {
-            // 成功登录
-            message.success('登录成功');
-            // 保持登录状态
-            const user = result.data;
-            memoryUtils.saveUser(user);
-
-            // 跳转到管理界面
-            navigate('/home', { replace: true })
-
-        } else {//失败了题
-            //提示错误信息
-            message.error(result.msg);
+        
+        try {
+            props.login(username, password); 
+            
+        }catch(error) {
+            console.log("请求出错", error);
         }
 
 
@@ -57,6 +42,12 @@ const Login = () => {
             else if (!/^[a-zA-Z0-9_]+$/.test(value)) reject('用户名必须是英文字母数字下划线')
             else resolve('输入正确')
         })
+    }
+    
+    const user = props.user;
+    
+    if (user && user._id) {
+        return navigate('/home', {replace : true});
     }
 
     return (
@@ -113,4 +104,9 @@ const Login = () => {
     )
 };
 
-export default Login;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    { login}
+)(Login);

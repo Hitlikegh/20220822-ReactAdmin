@@ -3,9 +3,14 @@ import { Table, Button, message, Card, Modal } from 'antd';
 import { reqAddRoles, reqGetRoles, reqUpdateRole } from '../../api';
 import AddFormRole from './add-form-role';
 import AuthForm from './auth-form'
-import memoryUtils from '../../utils/memoryUtils';
 
-const Role = () => {
+// redux
+import { connect } from 'react-redux';
+import { logout } from '../../redux/action';
+
+
+const Role = (props) => {
+
     const getFormValue = useRef();
     const getUpdateValue = React.createRef();
     // const [selectionType, setSelectionType] = useState('radio');
@@ -71,15 +76,23 @@ const Role = () => {
         role.menus = menus;
         const { _id } = role //id
         const auth_time = Date.now() //授权时间
-        const auth_name = memoryUtils.getUser().username //授权用户->当前登录用户
+        const auth_name = props.user.username //授权用户->当前登录用户
         const newRole = { _id, menus, auth_name, auth_time }
         const result = (await reqUpdateRole(newRole)).data;
         // console.log("role", role);
         // console.log("result", result);
 
         if (result.status === 0) {
-            message.success('角色权限更新成功')
-            getRoles();
+            // 如果当前更新的是自己角色的权限, 强制退出
+            if (states.role._id === props.user.role_id) {
+                props.logout()
+                message.success('当前角色权限更新成功')
+
+            } else {
+            // 更新roles
+                message.success('角色权限更新成功');
+                getRoles();
+            }
 
         } else {
             message.error('角色权限更新失败')
@@ -138,9 +151,7 @@ const Role = () => {
 
 
     useEffect(() => {
-        return () => {
             getRoles();
-        };
     }, []);
 
     const { roles, role, isShowModal, isShowAuth } = states;
@@ -218,4 +229,9 @@ const Role = () => {
 }
 
 
-export default Role;
+export default connect(
+    state => ({
+        user: state.user
+    }),
+    {logout}
+)(Role);

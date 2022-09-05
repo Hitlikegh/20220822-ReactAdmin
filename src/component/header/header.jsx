@@ -6,11 +6,17 @@ import { Modal, Button } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { reqWeatherQuery } from '../../api'
 import withRouter from '../../utils/withRouter.js'
-import menuList from '../../config/menuConifg';
+
+// redux
+import { connect } from 'react-redux';
+import { logout } from '../../redux/action';
 
 const { confirm } = Modal;
 
 class Headersh extends Component {
+
+    
+
     state = {
         currentTime: formateDate(Date.now()), //当前时间字符串
         weather: '', //天气的文本
@@ -21,11 +27,7 @@ class Headersh extends Component {
         const { weather, city } = await reqWeatherQuery(310000)
         this.setState({ weather, city })
     }
-    // 获取用户名
-    getUserName = () => {
-        const { username } = memoryUtils.getUser()
-        return username
-    }
+    
     // 获取时间
     getDate = () => {
         this.intervalId = setInterval(() => {
@@ -33,25 +35,7 @@ class Headersh extends Component {
             this.setState({ currentTime })
         }, 1000)
     }
-    // 获取首页
-    getTitle = () => {
-        const path = this.props.location.pathname
-        let title
-        menuList.forEach(item => {
-            if (item.key === path) { // 如果当前item对象的key与path一样,item的title就是需要显示的title
-                title = item.title
-            } else if (item.children) {
-                // 在所有子item中查找匹配的
-                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
-                // 如果有值才说明有匹配的
-                if (cItem) {
-                    // 取出它的title
-                    title = cItem.title
-                }
-            }
-        })
-        return title
-    }
+    
     // 退出登录,使用antd的Modal对话框
     logout = () => {
         confirm({
@@ -59,10 +43,8 @@ class Headersh extends Component {
             icon: <ExclamationCircleOutlined />,
             // content: 'Some descriptions',
             onOk: () => {
-                // 清除用户
-                memoryUtils.removeUser()
-                // 跳转到登录界面
-                this.props.navigate('/login')
+                
+                this.props.logout();
             },
             onCancel() {
             },
@@ -78,14 +60,19 @@ class Headersh extends Component {
         clearInterval(this.intervalId)
     }
     render() {
+        // const title = this.getTitle(); 
+        const title = this.props.headTitle; // redux
+        const username = this.props.user.username; // redux
+
         return (
             <div className='header'>
                 <div className='header-top'>
-                    <span>欢迎{this.getUserName()}</span>
-                    <Button type="link" onClick={this.logout}>退出</Button>
+                    {/* <span>欢迎{this.getUserName()}</span> */}
+                    <span>欢迎{username}</span>
+                    <Button type="link" onClick={() => this.logout()}>退出</Button>
                 </div>
                 <div className='header-bottom'>
-                    <div className='header-bottom-left'>{this.getTitle()}</div>
+                    <div className='header-bottom-left'>{title}</div>
                     <div className='header-bottom-right'>
                         <span>{this.state.currentTime}</span>
                         <span>{this.state.city}</span>
@@ -97,4 +84,13 @@ class Headersh extends Component {
     }
 }
 
-export default withRouter(Headersh)
+export default connect(
+    state => ({
+        ...state,
+        headTitle: state.headTitle,
+        user: state.user
+    }),
+    { logout}
+    )(withRouter(Headersh))
+    
+// export default withRouter(Headersh)

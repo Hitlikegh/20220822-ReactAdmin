@@ -194,10 +194,7 @@ const Category = () => {
 
 
     useEffect(() => {
-        return () => {
-
-            getCategory(states.parentId);
-        };
+        getCategory(states.parentId);
     }, []);
 
 
@@ -232,7 +229,7 @@ const Category = () => {
                     columns={columns}
                     rowKey={'_id'}
                     loading={loading}
-                    pagination={{ defaultPageSize: 5, showQuickJumper: true }} />;
+                    pagination={{ defaultPageSize: 5, showQuickJumper: true }} />
 
                 <Modal
                     title="添加分类"

@@ -61,10 +61,11 @@ const Role = (props) => {
         } else {
             message.error('添加失败')
         }
-        setStates({
-            ...states,
-            isShowModal: false
-        })
+        // setStates({
+        //     ...states,
+        //     isShowModal: false
+        // })
+        states.isShowModal = false;
 
     }
 
@@ -97,10 +98,11 @@ const Role = (props) => {
         } else {
             message.error('角色权限更新失败')
         }
-        setStates({
-            ...states,
-            isShowAuth: false
-        })
+        // setStates({
+        //     ...states,
+        //     isShowAuth: false
+        // })
+        states.isShowAuth = false;
     };
 
 

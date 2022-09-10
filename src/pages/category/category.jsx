@@ -46,7 +46,11 @@ const Category = () => {
             // 取出分类数组， 可能是一级的也可能是二级的
             if (parentId === "0") {
                 const categorys = result.data;
-                setStates({ ...states, categorys: categorys, dataSource: categorys });
+                setStates({ 
+                    ...states, 
+                    categorys: categorys, 
+                    dataSource: categorys 
+                });
 
 
             } else {
@@ -56,7 +60,7 @@ const Category = () => {
                     ...states,
                     subCategorys: subCategorys,
                     dataSource: subCategorys,
-                    showModal: '0'
+                    showModal: 0
                 });
 
 
@@ -107,7 +111,10 @@ const Category = () => {
         // if (typeof (states.forms) !== "undefined") {
         //     states.forms.current.setFieldsValue({ parentId: states.categorys._id })
         // }
-        setStates({ ...states, showModal: 1 });
+        setStates({ 
+            ...states, 
+            showModal: 1
+        });
     }
     // 更新提示框
     const updateCategroy = (category) => {
@@ -115,16 +122,25 @@ const Category = () => {
         // if (typeof (states.forms) !== "undefined") {
         //     states.forms.current.setFieldsValue({ categoryName: _category.name })
         // }
-        setStates({ ...states, showModal: 2, category: _category })
+        setStates({
+            ...states, 
+            showModal: 2, 
+            category: _category 
+        })
     }
     // 退出提示框
     const cancelModal = () => {
-        setStates({ ...states, showModal: 0 });
+        // setStates({ 
+        //     ...states, 
+        //     showModal: 0
+        // });
+        states.showModal = 0;
     }
     // 添加数据手动
     const handleAddOk = async () => {
         // console.log('添加', this.form.current.getFieldsValue())
         // 获取数据
+        
         const getFieldsForm = getFormValue.current.formFields;
         // console.log("getFieldsForm", getFieldsForm);
 
@@ -143,6 +159,8 @@ const Category = () => {
         // console.log(states.subCategorys);
         // 取消对话框
         cancelModal();
+
+        
     }
     // 手动更新数据
     const HandleUpdateOk = async () => {
@@ -157,6 +175,8 @@ const Category = () => {
         if (result.status === 0) {
             // 重新设置state
             getCategory(states.parentId);
+            // states.showModal = 0;
+
             cancelModal();
         }
         else {

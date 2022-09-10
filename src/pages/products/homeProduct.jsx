@@ -30,7 +30,11 @@ const HomeProduct = () => {
     const getProducts = async (pageNum) => {
         states.pageNum = pageNum;
 
-        setStates({ ...states, loading: true, pageNum })
+        setStates({ 
+            ...states, 
+            loading: true, 
+            pageNum 
+        })
         const { searchName, searchType } = states
         // 如果搜索关键字有值, 说明我们要做搜索分页
         let result
@@ -44,7 +48,10 @@ const HomeProduct = () => {
         }
         if (result.status === 0) {
             // 隐藏loading
-            setStates({ ...states, loading: false })
+            setStates({ 
+                ...states, 
+                loading: false 
+            })
             const total = result.data.total;
             // console.log('搜索结果的总数：', total);
             // console.log('商品总数：', total);

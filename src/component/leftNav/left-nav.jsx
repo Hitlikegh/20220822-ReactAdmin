@@ -91,10 +91,10 @@ const LeftNav = (props) => {
         return menuList.map((items) => {
             if (!items.children) {
 
-                // if (items.key === path || path.indexOf(items.key) === 0) {
-                //     //更新redux中的状态
-                //     props.setHeadTitle(items.title);
-                // }
+                if (items.key === path || path.indexOf(items.key) === 0) {
+                    //更新redux中的状态
+                    props.setHeadTitle(items.title);
+                }
 
                 return (
                     <Menu.Item key={items.key} >

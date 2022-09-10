@@ -60,7 +60,7 @@ const User = () => {
         const role = states.roles.find((role) => {
             return role._id === role_id
         })
-        // console.log("role", role);
+        
         if (role) {
             return role.name
         } else {
@@ -70,18 +70,15 @@ const User = () => {
 
     const getUsers = async () => {
         const result = (await reqGetUsers()).data;
-        // console.log("result", result);
+        
         if (result.status === 0) {
             const { users, roles } = result.data;
-            // const test = [users[9]];
-            // console.log("test", test);
-            // console.log("users", users);
+
             setStates({
                 ...states,
                 users: users,
                 roles: roles
             });
-            // console.log("users", states.users);
 
         } else {
             message.error('获取用户列表失败')
@@ -101,11 +98,13 @@ const User = () => {
     const updateUser = (user) => {
 
         // 保存当前用户用于默认值显示
-        setStates({
-            ...states,
-            isUpdate: true,
-            user: user
-        })
+        // setStates({
+        //     ...states,
+        //     isUpdate: true,
+        //     user: user
+        // })
+        states.user = user;
+        states.isUpdate = true;
         // 清空form
         form.setFieldsValue(user)
         setStates({
@@ -137,33 +136,36 @@ const User = () => {
         // 判断是修改还是添加
         if (states.isUpdate) {//修改
             // 保存数据
-            const { _id } = user
+            const { _id } = states.user
             const { username, phone, email, role_id } = form.getFieldsValue()
             const newUser = { _id, username, phone, email, role_id }
+            // console.log("newUser修改里", newUser);
+
             // 发送请求
             const result = (await reqUpdateUser(newUser)).data
+            // console.log("更新里的result",result);
             if (result.status === 0) {
                 message.success(`${isUpdate ? '修改' : '添加'}用户成功`)
                 // 更新用户列表
                 getUsers()
-                setStates({
-                    ...states,
-                    isShowModal: false
-                })
+                // setStates({
+                //     ...states,
+                //     isShowModal: false
+                // })
+                states.isShowModal = false;
             }
         } else {//添加
             // 保存数据
             const newUser = form.getFieldsValue()
+            console.log("newUser添加里", newUser);
             // 发送请求
             const result = (await reqAddUser(newUser)).data
             if (result.status === 0) {
                 message.success(`${isUpdate ? '修改' : '添加'}用户成功`)
                 // 更新用户列表
                 getUsers()
-                setStates({
-                    ...states,
-                    isShowModal: false
-                })
+                states.isShowModal = false;
+                
             }
         }
 
@@ -198,7 +200,6 @@ const User = () => {
             <Card
                 title={title}
             >
-                {/* <Table dataSource={dataSource} columns={columns} rowKey={'_id'} />; */}
                 <Table
                     bordered
                     dataSource={users}

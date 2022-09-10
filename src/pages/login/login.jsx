@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
 // import './App.css';
-import React from "react";
+import React, {useCallback} from "react";
 import { useNavigate } from 'react-router-dom'
 import './login.less';
 import logo from '../../assets/images/logo.jpg';
@@ -11,6 +11,9 @@ import { Button, Form, Input } from 'antd';
 import { login } from "../../redux/action";
 import { connect } from "react-redux";
 
+// 防抖优化lodash
+import { debounce } from "lodash";
+
 const Login = (props) => {
 
     const Item = Form.Item;
@@ -18,6 +21,7 @@ const Login = (props) => {
 
     async function onFinish(values) {
         const { username, password } = values;
+        console.log(values);
         
         try {
             props.login(username, password); 
@@ -25,24 +29,45 @@ const Login = (props) => {
         }catch(error) {
             console.log("请求出错", error);
         }
-
-
     }
 
-    function validatePWD(rule, value, callback) {
 
-
+    // 可以加入防抖！！
+    const validatePWD = (rule, value, callback) => {
+        // console.log('validatePWD');
+        // console.log("value", value, "rule", rule);
+        // console.log("callback", callback);
 
         // callback('')//参数表示验证的提示例如：请输入密码；为空表示验证通过(这是4.0版本之前)
         // 4.0版本需要使用Promise
-        return new Promise((resolve, reject) => {
-            if (!value.trim()) reject('输入不能为空')
-            else if (value.length < 4) reject('长度不小于4位')
-            else if (value.length > 12) reject('长度不大于12位')
-            else if (!/^[a-zA-Z0-9_]+$/.test(value)) reject('用户名必须是英文字母数字下划线')
-            else resolve('输入正确')
-        })
+        // return new Promise((resolve, reject) => {
+        //     if (!value.trim()) reject('输入不能为空')
+        //     else if (value.length < 4) reject('长度不小于4位')
+        //     else if (value.length > 12) reject('长度不大于12位')
+        //     else if (!/^[a-zA-Z0-9_]+$/.test(value)) reject('用户名必须是英文字母数字下划线')
+        //     else resolve('输入正确')
+        // })
+        try {
+            throw new Error('Something wrong!');
+        } catch (err) {
+            callback(err);
+        }
+        
+        if (!value.trim()) {return Promise.reject('输入不能为空')}
+        else if (value.length < 4) {return Promise.reject('长度不小于4位')}
+        else if (value.length > 12) {return Promise.reject('长度不大于12位')}
+        else if (!/^[a-zA-Z0-9_]+$/.test(value)) {return Promise.reject('用户名必须是英文字母数字下划线')}
+        else return Promise.resolve('输入正确')
+
+        
     }
+
+    // const validatePWD_debounce = useCallback(debounce((rule, value, callback) => validatePWD(rule, value, callback), 1000), []) 
+    // const validate = (rule, value, callback) => {
+    //     validatePWD_debounce(rule, value, callback);
+    // }
+
+    
     
     const user = props.user;
     
@@ -77,7 +102,10 @@ const Login = (props) => {
                                 { whitespace: true }
                             ]}
                         >
-                            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
+                            <Input 
+                            prefix={<UserOutlined className="site-form-item-icon" />} 
+                            placeholder="用户名" 
+                            />
                         </Item>
                         <Item
                             name="password"
